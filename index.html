@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A Special Invite for Anisha 🎬</title>
+  <title>Weekly Calendar: March 17–22</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -75,6 +75,21 @@
       text-align: center;
       box-shadow: 0 25px 60px rgba(0,0,0,0.5);
       animation: cardIn 0.8s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    /* ── Calendar ── */
+    .calendar {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .calendar th {
+      padding: 1rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #e8e8ff;
+      font-weight: 600;
+      font-size: 1rem;
     }
     @keyframes cardIn {
       from { opacity: 0; transform: scale(0.7) translateY(40px); }
@@ -203,44 +218,17 @@
 
 <!-- Card -->
 <div class="card" id="card">
-
-  <!-- Invite content -->
-  <div class="invite-content">
-    <span class="icon">🎬</span>
-    <h1>Hey Anisha!</h1>
-    <p class="subtitle">You've got a very special invitation ✨</p>
-
-    <div class="details">
-      <div class="detail-row">
-        <span class="emoji">📅</span>
-        <span>February 28</span>
-      </div>
-      <div class="detail-row">
-        <span class="emoji">🎥</span>
-        <span>Movie Night</span>
-      </div>
-    </div>
-
-    <div class="message-box" id="personal-message">
-      <!-- Add your personal message here — replace this text! -->
-      Your personal message goes here... 💕
-    </div>
-
-    <p class="question">So... will you go on a date with me? 🥺</p>
-
-    <div class="buttons" id="btn-container">
-      <button class="btn btn-yes" id="yes-btn">Yes! 🎉</button>
-      <button class="btn btn-no" id="no-btn">No 😢</button>
-    </div>
-  </div>
-
-  <!-- Yes screen -->
-  <div class="yes-screen">
-    <span class="confetti-burst">🎊🎬🎊</span>
-    <h2>Yay! It's a date!</h2>
-    <p>Can't wait — see you on Feb 28! 🍿❤️</p>
-  </div>
-
+  <h1>Week of March 17–22</h1>
+  <table class="calendar">
+    <tr>
+      <th>Mon<br>Mar 17</th>
+      <th>Tue<br>Mar 18</th>
+      <th>Wed<br>Mar 19</th>
+      <th>Thu<br>Mar 20</th>
+      <th>Fri<br>Mar 21</th>
+      <th>Sat<br>Mar 22</th>
+    </tr>
+  </table>
 </div>
 
 <script>
@@ -259,7 +247,7 @@
     starsEl.appendChild(s);
   }
 
-  // ── Floating emojis ──
+  // ── Floating emojis (optional) ──
   const floatersEl = document.getElementById('floaters');
   const emojiPool = ['🍿','🎬','❤️','🎥','⭐','🌙','💕','✨'];
   for (let i = 0; i < 18; i++) {
@@ -274,89 +262,6 @@
     `;
     floatersEl.appendChild(f);
   }
-
-  // ── No button flees ──
-  const noBtn   = document.getElementById('no-btn');
-  const yesBtn  = document.getElementById('yes-btn');
-  const card    = document.getElementById('card');
-
-  // Position no-btn initially next to yes-btn
-  (function initNoBtn() {
-    const yesBounds = yesBtn.getBoundingClientRect();
-    const cardBounds = card.getBoundingClientRect();
-    noBtn.style.left = (yesBounds.right - cardBounds.left + 16) + 'px';
-    noBtn.style.top  = (yesBounds.top  - cardBounds.top) + 'px';
-  })();
-
-  let fleeing = false;
-
-  function flee() {
-    if (fleeing) return;
-    fleeing = true;
-
-    const cardRect = card.getBoundingClientRect();
-    const noBtnRect = noBtn.getBoundingClientRect();
-    const margin = 10;
-
-    const maxX = cardRect.width  - noBtnRect.width  - margin;
-    const maxY = cardRect.height - noBtnRect.height - margin;
-
-    let newX, newY, tries = 0;
-    do {
-      newX = Math.random() * maxX + margin / 2;
-      newY = Math.random() * maxY + margin / 2;
-      tries++;
-    } while (
-      tries < 20 &&
-      Math.abs(newX - (parseFloat(noBtn.style.left) || 0)) < 60 &&
-      Math.abs(newY - (parseFloat(noBtn.style.top)  || 0)) < 40
-    );
-
-    noBtn.style.transition = 'left 0.25s cubic-bezier(0.34,1.56,0.64,1), top 0.25s cubic-bezier(0.34,1.56,0.64,1)';
-    noBtn.style.left = newX + 'px';
-    noBtn.style.top  = newY + 'px';
-
-    setTimeout(() => { fleeing = false; }, 300);
-  }
-
-  noBtn.addEventListener('mouseover', flee);
-  noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); flee(); });
-
-  // ── Yes button ──
-  yesBtn.addEventListener('click', () => {
-    card.classList.add('show-yes');
-    launchConfetti();
-  });
-
-  // ── Confetti ──
-  function launchConfetti() {
-    const bursts = ['🎉','🎊','❤️','⭐','🍿','🎬','💕'];
-    for (let i = 0; i < 22; i++) {
-      const el = document.createElement('div');
-      el.textContent = bursts[Math.floor(Math.random() * bursts.length)];
-      el.style.cssText = `
-        position:fixed;
-        left:${Math.random()*100}vw;
-        top:-30px;
-        font-size:${Math.random()*1.5+1}rem;
-        pointer-events:none;
-        z-index:999;
-        animation: fallDown ${(Math.random()*2+1.5).toFixed(1)}s ease-in forwards;
-        animation-delay:${(Math.random()*0.8).toFixed(2)}s;
-      `;
-      document.body.appendChild(el);
-      el.addEventListener('animationend', () => el.remove());
-    }
-  }
-
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes fallDown {
-      from { transform: translateY(0) rotate(0deg); opacity: 1; }
-      to   { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-    }
-  `;
-  document.head.appendChild(style);
 </script>
 </body>
 </html>

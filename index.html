@@ -10,7 +10,7 @@
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+      background: linear-gradient(135deg, #0a0e27 0%, #0d1117 50%, #1a0d2e 100%);
       font-family: 'Quicksand', sans-serif;
       display: flex;
       align-items: center;
@@ -38,28 +38,6 @@
       to   { opacity: 0.9; transform: scale(1.4); }
     }
 
-    /* ── Floating emojis ── */
-    .floaters {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .floater {
-      position: absolute;
-      font-size: var(--fs, 1.5rem);
-      animation: floatUp var(--dur, 8s) linear infinite;
-      animation-delay: var(--delay, 0s);
-      opacity: 0;
-      bottom: -60px;
-    }
-    @keyframes floatUp {
-      0%   { transform: translateY(0)   rotate(0deg);   opacity: 0; }
-      10%  { opacity: 0.7; }
-      90%  { opacity: 0.7; }
-      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
-    }
-
     /* ── Card ── */
     .card {
       position: relative;
@@ -69,11 +47,11 @@
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 28px;
-      padding: 3rem 3.5rem;
-      max-width: 520px;
+      padding: 4.5rem 5rem;
+      max-width: 700px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
       animation: cardIn 0.8s cubic-bezier(0.34,1.56,0.64,1) both;
     }
 
@@ -104,17 +82,17 @@
 
     h1 {
       font-family: 'Pacifico', cursive;
-      font-size: 2.1rem;
+      font-size: 3rem;
       color: #ffd6e7;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
       text-shadow: 0 0 20px rgba(255,150,180,0.5);
     }
 
     .subtitle {
       color: #a8c0ff;
-      font-size: 1rem;
+      font-size: 1.3rem;
       letter-spacing: 0.05em;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
       font-weight: 600;
     }
 
@@ -164,11 +142,11 @@
     .buttons { display: flex; gap: 1rem; justify-content: center; position: relative; }
 
     .btn {
-      padding: 0.85rem 2.2rem;
+      padding: 1.1rem 2.8rem;
       border: none;
       border-radius: 50px;
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
@@ -184,7 +162,7 @@
       background: rgba(255,255,255,0.12);
       color: #ccc;
       border: 1px solid rgba(255,255,255,0.2);
-      position: absolute; /* will be absolutely positioned when fleeing */
+      position: relative; /* start beside the yes button */
     }
     .btn-no:hover { background: rgba(255,255,255,0.18); }
 
@@ -213,22 +191,31 @@
 <!-- Stars -->
 <div class="stars" id="stars"></div>
 
-<!-- Floating emojis -->
-<div class="floaters" id="floaters"></div>
-
-<!-- Card -->
 <div class="card" id="card">
-  <h1>Week of March 17–22</h1>
-  <table class="calendar">
-    <tr>
-      <th>Mon<br>Mar 17</th>
-      <th>Tue<br>Mar 18</th>
-      <th>Wed<br>Mar 19</th>
-      <th>Thu<br>Mar 20</th>
-      <th>Fri<br>Mar 21</th>
-      <th>Sat<br>Mar 22</th>
-    </tr>
-  </table>
+  <!-- invite content -->
+  <div class="invite-content" id="invite-screen">
+    <h1>Jojo's &amp; Anisha's Week of Fun</h1>
+    <p class="subtitle">Cutie do you want to join me?</p>
+    <div class="buttons" id="btn-container">
+      <button class="btn btn-yes" id="yes-btn">Yes!</button>
+      <button class="btn btn-no" id="no-btn">No</button>
+    </div>
+  </div>
+
+  <!-- calendar screen, hidden initially -->
+  <div class="calendar-screen" id="calendar-screen" style="display:none;">
+    <h1>Week of March 17–22</h1>
+    <table class="calendar">
+      <tr>
+        <th>Mon<br>Mar 17</th>
+        <th>Tue<br>Mar 18</th>
+        <th>Wed<br>Mar 19</th>
+        <th>Thu<br>Mar 20</th>
+        <th>Fri<br>Mar 21</th>
+        <th>Sat<br>Mar 22</th>
+      </tr>
+    </table>
+  </div>
 </div>
 
 <script>
@@ -247,21 +234,69 @@
     starsEl.appendChild(s);
   }
 
-  // ── Floating emojis (optional) ──
-  const floatersEl = document.getElementById('floaters');
-  const emojiPool = ['🍿','🎬','❤️','🎥','⭐','🌙','💕','✨'];
-  for (let i = 0; i < 18; i++) {
-    const f = document.createElement('div');
-    f.className = 'floater';
-    f.textContent = emojiPool[Math.floor(Math.random() * emojiPool.length)];
-    f.style.cssText = `
-      left:${Math.random()*100}%;
-      --fs:${(Math.random()*1.2+0.9).toFixed(1)}rem;
-      --dur:${(Math.random()*8+7).toFixed(1)}s;
-      --delay:${(Math.random()*10).toFixed(1)}s;
-    `;
-    floatersEl.appendChild(f);
+  // ── Shooting Stars ──
+  // Removed - shooting stars disabled
+
+  // ── Interaction logic ──
+  const noBtn   = document.getElementById('no-btn');
+  const yesBtn  = document.getElementById('yes-btn');
+  const card    = document.getElementById('card');
+  const inviteScreen = document.getElementById('invite-screen');
+  const calendarScreen = document.getElementById('calendar-screen');
+
+  let fleeing = false;
+  let isAbsolute = false;
+
+  function flee() {
+    if (fleeing) return;
+    fleeing = true;
+
+    // Switch to absolute positioning on first flee
+    if (!isAbsolute) {
+      isAbsolute = true;
+      const rect = noBtn.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = (rect.left - cardRect.left) + 'px';
+      noBtn.style.top  = (rect.top  - cardRect.top)  + 'px';
+    }
+
+    const cardRect = card.getBoundingClientRect();
+    const noBtnRect = noBtn.getBoundingClientRect();
+    const margin = 10;
+
+    const maxX = cardRect.width  - noBtnRect.width  - margin;
+    const maxY = cardRect.height - noBtnRect.height - margin;
+
+    let newX, newY, tries = 0;
+    do {
+      newX = Math.random() * maxX + margin / 2;
+      newY = Math.random() * maxY + margin / 2;
+      tries++;
+    } while (
+      tries < 20 &&
+      Math.abs(newX - (parseFloat(noBtn.style.left) || 0)) < 60 &&
+      Math.abs(newY - (parseFloat(noBtn.style.top)  || 0)) < 40
+    );
+
+    // Ensure bounded
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+
+    noBtn.style.transition = 'left 0.25s cubic-bezier(0.34,1.56,0.64,1), top 0.25s cubic-bezier(0.34,1.56,0.64,1)';
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top  = newY + 'px';
+
+    setTimeout(() => { fleeing = false; }, 300);
   }
+
+  noBtn.addEventListener('mouseover', flee);
+  noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); flee(); });
+
+  yesBtn.addEventListener('click', () => {
+    // Navigate to march 17 page
+    window.location.href = 'march17.html';
+  });
 </script>
 </body>
 </html>

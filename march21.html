@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>March 21</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    .full-screen {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ── Static background (lunch) ── */
+    #lunch-section {
+      background: url('https://momsdinner.net/wp-content/uploads/2022/07/Meals-for-Large-Group-on-Vacation-1.jpg') center/cover no-repeat;
+    }
+
+    /* ── Fading slideshow (movie) ── */
+    .bg-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      z-index: 0;
+    }
+
+    .bg-slide.active { opacity: 1; }
+
+    .bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1;
+    }
+
+    /* ── Content layers ── */
+    .content-wrapper {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      max-width: 680px;
+      animation: fadeUp 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 4rem;
+      color: #fff;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.6);
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      color: #ffe0c8;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      margin-bottom: 1.5rem;
+    }
+
+    .emoji {
+      font-size: 4rem;
+      margin: 1rem 0;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    .description {
+      color: #fff;
+      font-size: 1.2rem;
+      line-height: 1.8;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      margin-bottom: 1.5rem;
+    }
+
+    .scroll-hint {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      letter-spacing: 0.05em;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50%       { opacity: 1; }
+    }
+
+    /* ── Movie night poster box ── */
+    .movie-box {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      margin: 1rem 0 1.5rem;
+      text-align: left;
+    }
+
+    .movie-poster {
+      width: 90px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      flex-shrink: 0;
+    }
+
+    .movie-info h3 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: #fff;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+      margin-bottom: 0.4rem;
+    }
+
+    .movie-info p {
+      color: #ffe0c8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .btn {
+      padding: 1.1rem 2.8rem;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+      color: #fff;
+      box-shadow: 0 6px 24px rgba(255,107,157,0.5);
+      margin-top: 0.5rem;
+    }
+
+    .btn:hover  { transform: scale(1.08); box-shadow: 0 10px 30px rgba(255,107,157,0.65); }
+    .btn:active { transform: scale(0.95); }
+  </style>
+</head>
+<body>
+
+<!-- Lunch Hangout -->
+<div class="full-screen" id="lunch-section">
+  <div class="bg-overlay"></div>
+  <div class="content-wrapper">
+    <h1>March 21 🍽️</h1>
+    <p class="subtitle">Lunch with the Bains Fam</p>
+    <div class="emoji">🥘</div>
+    <p class="description"></p>
+    <p class="scroll-hint">↓ scroll down ↓</p>
+  </div>
+</div>
+
+<!-- Movie Night -->
+<div class="full-screen" id="movie-section">
+  <div class="bg-slide active" style="background-image: url('https://cdn.esquireindia.co.in/editor-images/2025-11-18T06%3A24%3A38.632Z-file-image-2025-07-06t135956-1751790858.jpg')"></div>
+  <div class="bg-slide" style="background-image: url('https://images.lifestyleasia.com/wp-content/uploads/sites/7/2025/12/05175744/dhurandhar-hero-1600x900.jpg')"></div>
+  <div class="bg-slide" style="background-image: url('https://www.pinkvilla.com/images/2025-07/1579892035_ranveer-singh-_2_.webp')"></div>
+  <div class="bg-slide" style="background-image: url('https://www.deccanchronicle.com/h-upload/2025/12/09/1987919-untitled-design-2025-12-09t200802089.webp')"></div>
+  <div class="bg-slide" style="background-image: url('https://mxp-media.ilnmedia.com/media/content/2025/Dec/image-1-593_69354b74823e1.jpg?w=780&h=585&cc=1')"></div>
+  <div class="bg-slide" style="background-image: url('https://images.indianexpress.com/2025/12/akshaye-khanna-4.jpg?w=1200')"></div>
+  <div class="bg-overlay"></div>
+  <div class="content-wrapper">
+    <h1>Movie Night 🎬</h1>
+    <p class="subtitle">Dhurandhar 2 in theatres!</p>
+    <div class="movie-box">
+      <img class="movie-poster" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF90yn3smcHtWB2IFR-zG_tajtEhZMqh_qAQ&s" alt="Dhurandhar 2 poster" />
+      <div class="movie-info">
+        <h3>Dhurandhar 2</h3>
+        <p>🍿</p>
+      </div>
+    </div>
+    <button class="btn" id="continue-btn">Continue to March 22</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('#movie-section .bg-slide');
+    let current = 0;
+
+    setInterval(function() {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 4000);
+
+    const continueBtn = document.getElementById('continue-btn');
+    if (continueBtn) {
+      continueBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'march22.html';
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

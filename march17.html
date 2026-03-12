@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flight to Ottawa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 100%);
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Stars background ── */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      display: none;
+    }
+
+    /* ── Map Container ── */
+    .map-container {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(50, 80, 150, 0.3), rgba(80, 120, 180, 0.25));
+      z-index: 5;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .map-background {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border-radius: 0;
+      border: none;
+      position: relative;
+      box-shadow: none;
+    }
+
+    .city {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #000;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .city-dot {
+      width: 14px;
+      height: 14px;
+      background: #ffd6e7;
+      border-radius: 50%;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 0 12px rgba(255, 214, 231, 0.8);
+    }
+
+    .winnipeg {
+      bottom: 15%;
+      left: 10%;
+    }
+
+    .ottawa {
+      top: 15%;
+      right: 10%;
+    }
+
+    .flight-path {
+      position: absolute;
+      bottom: calc(15% + 7px);
+      left: calc(10% + 7px);
+      width: calc(80% - 14px);
+      height: 2px;
+      background: repeating-linear-gradient(90deg, rgba(255, 214, 231, 0.5) 0px, rgba(255, 214, 231, 0.5) 10px, transparent 10px, transparent 20px);
+      pointer-events: none;
+      display: none;
+    }
+
+    .flight-plane {
+      position: absolute;
+      bottom: calc(15% + 2px);
+      left: calc(10% + 7px);
+      font-size: 2.5rem;
+      opacity: 0;
+      z-index: 10;
+    }
+
+    @keyframes fly {
+      0% {
+        opacity: 0;
+        left: calc(10% + 7px);
+        bottom: calc(15% + 2px);
+        transform: rotate(-15deg);
+      }
+      10% {
+        opacity: 1;
+      }
+      50% {
+        bottom: calc(50%);
+        transform: rotate(0deg);
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        left: calc(90% - 30px);
+        bottom: calc(85% - 30px);
+        transform: rotate(15deg);
+      }
+    }
+
+    .flight-plane.flying {
+      animation: fly 5s ease-in-out forwards;
+    }
+
+    /* ── Plane Screen ── */
+    .plane-screen {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: all;
+    }
+
+    .plane-content {
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 3rem;
+      color: #ffd6e7;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 20px rgba(255, 150, 180, 0.5);
+    }
+
+    .plane-emoji {
+      font-size: 5rem;
+      animation: planeBounce 2s ease-in-out infinite;
+      margin: 2rem 0;
+    }
+
+    @keyframes planeBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .board-btn {
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .board-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 25px rgba(74, 222, 128, 0.4);
+    }
+
+    .board-btn:active {
+      transform: scale(0.95);
+    }
+
+    .plane-screen.hidden {
+      display: none;
+    }
+
+    .map-container.show {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Map Container -->
+<div class="map-container" id="map-container">
+  <div class="map-background">
+    <div class="city winnipeg">
+      <div class="city-dot"></div>
+      Winnipeg
+    </div>
+    <div class="city ottawa">
+      <div class="city-dot"></div>
+      Ottawa
+    </div>
+    <div class="flight-path"></div>
+    <div class="flight-plane" id="flight-plane">✈️</div>
+  </div>
+</div>
+
+<!-- Plane Screen -->
+<div class="plane-screen" id="plane-screen">
+  <div class="plane-content">
+    <h1>March 17</h1>
+    <div class="plane-emoji">✈️</div>
+    <button class="board-btn" id="board-btn">Get on the plane</button>
+  </div>
+</div>
+
+<script>
+  // ── Stars ──
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%; left:${Math.random()*100}%;
+      --d:${(Math.random()*4+2).toFixed(1)}s;
+      animation-delay:${(Math.random()*4).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ── Interaction logic ──
+  const boardBtn = document.getElementById('board-btn');
+  const planeScreen = document.getElementById('plane-screen');
+  const mapContainer = document.getElementById('map-container');
+  const flightPlane = document.getElementById('flight-plane');
+
+  boardBtn.addEventListener('click', () => {
+    // Hide the plane screen
+    planeScreen.classList.add('hidden');
+    
+    // Show the map container with flying animation
+    setTimeout(() => {
+      mapContainer.classList.add('show');
+      // Start the plane flying after a brief delay
+      setTimeout(() => {
+        flightPlane.classList.add('flying');
+        // Navigate to March 18 page when flight finishes (5 seconds)
+        setTimeout(() => {
+          window.location.href = 'march18.html';
+        }, 5000);
+      }, 500);
+    }, 300);
+  });
+</script>
+</body>
+</html>
